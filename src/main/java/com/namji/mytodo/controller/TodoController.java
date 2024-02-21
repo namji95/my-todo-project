@@ -27,10 +27,16 @@ public class TodoController {
     }
 
     // 할일 전체 조회
-    @GetMapping("/todoList")
+    @GetMapping("/todos")
     public ResponseEntity<List<Todo>> getTodoList() {
-        List<Todo> todoList = todoService.getTodoList();
+        return new ResponseEntity<>(todoService.getTodoList(), HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(todoList, HttpStatus.OK);
+    // 할일 선택 조회
+    @GetMapping("/todos/{todoId}")
+    public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+        TodoResponseDto responseDto = todoService.getTodo(todoId);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }
