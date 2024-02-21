@@ -25,4 +25,9 @@ public class Todo {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContent();
     }
+
+    public void updateTodo (TodoRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContent();
+    }
 }
