@@ -4,61 +4,64 @@ import com.namji.mytodo.dto.todo.requestDto.TodoRequestDto;
 import com.namji.mytodo.dto.todo.responseDto.TodoResponseDto;
 import com.namji.mytodo.entity.Todo;
 import com.namji.mytodo.service.TodoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class TodoController {
 
-    private final TodoService todoService;
+  private final TodoService todoService;
 
-    // 할일 생성
-    @PostMapping("/todos")
-    public ResponseEntity<TodoResponseDto> createTodo (
-            @RequestBody TodoRequestDto requestDto) {
-        TodoResponseDto responseDto = todoService.createTodo(requestDto);
+  // 할일 생성
+  @PostMapping("/todos")
+  public ResponseEntity<TodoResponseDto> createTodo(@RequestBody TodoRequestDto requestDto) {
+    TodoResponseDto responseDto = todoService.createTodo(requestDto);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-        // ResponseEntity
-    }
+    return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    // ResponseEntity
+  }
 
-    // 할일 전체 조회
-    @GetMapping("/todos")
-    public ResponseEntity<List<Todo>> getTodoList () {
-        return new ResponseEntity<>(todoService.getTodoList(), HttpStatus.OK);
-    }
+  // 할일 전체 조회
+  @GetMapping("/todos")
+  public ResponseEntity<List<Todo>> getTodoList() {
+    return new ResponseEntity<>(todoService.getTodoList(), HttpStatus.OK);
+  }
 
-    // 할일 선택 조회
-    @GetMapping("/todos/{todoId}")
-    public ResponseEntity<TodoResponseDto> getTodo (
-            @PathVariable Long todoId) {
-        TodoResponseDto responseDto = todoService.getTodo(todoId);
+  // 할일 선택 조회
+  @GetMapping("/todos/{todoId}")
+  public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+    TodoResponseDto responseDto = todoService.getTodo(todoId);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-    // 할일 수정
-    @PutMapping("/todos/{todoId}")
-    public ResponseEntity<TodoResponseDto> updateTodo (
-            @PathVariable Long todoId,
-            @RequestBody TodoRequestDto requestDto) {
-        TodoResponseDto responseDto = todoService.updateTodo(todoId, requestDto);
+  // 할일 수정
+  @PutMapping("/todos/{todoId}")
+  public ResponseEntity<TodoResponseDto> updateTodo(
+      @PathVariable Long todoId,
+      @RequestBody TodoRequestDto requestDto) {
+    TodoResponseDto responseDto = todoService.updateTodo(todoId, requestDto);
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-    
-    // 할일 삭제
-    @DeleteMapping("/todos/{todoId}")
-    public ResponseEntity<TodoResponseDto> deleteTodo (
-            @PathVariable Long todoId) {
-        TodoResponseDto responseDto = todoService.deleteTodo(todoId);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  // 할일 삭제
+  @DeleteMapping("/todos/{todoId}")
+  public ResponseEntity<TodoResponseDto> deleteTodo(@PathVariable Long todoId) {
+    TodoResponseDto responseDto = todoService.deleteTodo(todoId);
+
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 }

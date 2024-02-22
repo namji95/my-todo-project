@@ -21,55 +21,54 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final AuthenticationConfiguration authenticationConfiguration;
+  private final JwtUtil jwtUtil;
+  private final UserDetailsServiceImpl userDetailsService;
+  private final AuthenticationConfiguration authenticationConfiguration;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
-        // todo: 코드 해석...
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    // CSRF 설정
+    httpSecurity.csrf((csrf) -> csrf.disable());
 
-        // CSRF 설정
-        httpSecurity.csrf((csrf) -> csrf.disable());
+    // JWT 방식을 사용하기 위한 설정
+    httpSecurity.sessionManagement((sessionManagement) ->
+        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // JWT 방식을 사용하기 위한 설정
-        httpSecurity.sessionManagement((sessionManagement) ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    httpSecurity.authorizeHttpRequests((authorizeHttpRequests) ->
+            authorizeHttpRequests
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                // resources 접근 허용 설정
+                .requestMatchers("/users/**").permitAll()
+                // /users로 시작하는 요청 모두 접근 허가
+                .anyRequest().authenticated()
+        // 그 외 모든 요청 인증 처리
+    );
+    // 위 코드는 접근 권한 여부 설정을 위한 코드
 
-        httpSecurity.authorizeHttpRequests((authorizaHttpRequests) ->
-                authorizaHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        // resources 접근 허용 설정
-                        .requestMatchers("/users/**").permitAll()
-                        // /users로 시작하는 요청 모두 접근 허가
-                        .anyRequest().authenticated()
-                        // 그 외 모든 요청 인증 처리
-        );
-        // 위 코드는 접근 권한 여부 설정을 위한 코드
+    // 필터관리
+    httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+    httpSecurity.addFilterBefore(jwtAuthenticationFilter(),
+        UsernamePasswordAuthenticationFilter.class);
 
-        // 필터관리
-        httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JwtAuthorizationFilter.class);
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    return httpSecurity.build();
+  }
 
-        return httpSecurity.build();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration configuration
+  ) throws Exception {
+    return configuration.getAuthenticationManager();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager (
-            AuthenticationConfiguration configuration
-    ) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+  @Bean
+  public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+    filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+    return filter;
+  }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter () throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filter;
-    }
-
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
-    }
+  @Bean
+  public JwtAuthorizationFilter jwtAuthorizationFilter() {
+    return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+  }
 }
