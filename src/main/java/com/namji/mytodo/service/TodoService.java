@@ -23,7 +23,11 @@ public class TodoService {
 
         todoRepository.save(todo);
 
-        return new TodoResponseDto(todo.getTitle(), todo.getContents());
+        return new TodoResponseDto(
+                todo.getTitle(),
+                todo.getContents(),
+                todo.getCreatedAt(),
+                todo.getModifiedAt());
     }
 
     // 할일 전체 조회 로직
@@ -37,7 +41,11 @@ public class TodoService {
     @Transactional(readOnly = true)
     public TodoResponseDto getTodo(Long todoId) {
         Todo todo = findTodo(todoId);
-        TodoResponseDto responseDto = new TodoResponseDto(todo.getTitle(), todo.getContents());
+        TodoResponseDto responseDto = new TodoResponseDto(
+                todo.getTitle(),
+                todo.getContents(),
+                todo.getCreatedAt(),
+                todo.getModifiedAt());
         return responseDto;
     }
 
@@ -45,6 +53,8 @@ public class TodoService {
     @Transactional
     public TodoResponseDto updateTodo(Long todoId, TodoRequestDto requestDto) {
         Todo todo = findTodo(todoId);
+
+
         todo.updateTodo(requestDto);
         // jpa 중요한 요소 더티체킹
 
@@ -52,7 +62,11 @@ public class TodoService {
         // jpa에는 write query 트랜젝셔널이 같은 동작이 들어오면 쓰기 지연
         // 더티체킹과 쓰기 지연 중요 ***
 
-        TodoResponseDto responseDto = new TodoResponseDto(todo.getTitle(), todo.getContents());
+        TodoResponseDto responseDto = new TodoResponseDto(
+                todo.getTitle(),
+                todo.getContents(),
+                todo.getCreatedAt(),
+                todo.getModifiedAt());
 
         return responseDto;
     }
@@ -63,7 +77,11 @@ public class TodoService {
         Todo todo = findTodo(todoId);
         todoRepository.delete(todo);
 
-        return new TodoResponseDto(todo.getTitle(), todo.getContents());
+        return new TodoResponseDto(
+                todo.getTitle(),
+                todo.getContents(),
+                todo.getCreatedAt(),
+                todo.getModifiedAt());
     }
 
     private Todo findTodo (Long todoId) {

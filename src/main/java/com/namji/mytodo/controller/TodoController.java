@@ -52,7 +52,8 @@ public class TodoController {
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
+    
+    // 할일 삭제
     @DeleteMapping("/todos/{todoId}")
     public ResponseEntity<TodoResponseDto> deleteTodo (
             @PathVariable Long todoId) {

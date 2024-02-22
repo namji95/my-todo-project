@@ -3,9 +3,7 @@ package com.namji.mytodo.dto.user.requestDto;
 import lombok.Getter;
 
 @Getter
-public class SignupRequestDto {
+public class LoginRequestDto {
     private String username;
     private String password;
-    private String email;
-    private String nickname;
 }
