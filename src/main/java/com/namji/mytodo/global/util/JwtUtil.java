@@ -30,14 +30,12 @@ public class JwtUtil {
   public static final String BEARER_PREFIX = "Bearer ";
   // 토큰 만료 시간
   public static final long TOKEN_TIME = 60 * 60 * 1000L;
-
+  // 로그 설정
+  public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
+  private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
   @Value(("${jwt.secret.key}"))
   private String secretKey;
   private Key key;
-  private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-  // 로그 설정
-  public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
   @PostConstruct
   public void init() {
@@ -46,13 +44,13 @@ public class JwtUtil {
   }
 
   // 토큰 생성
-  public String createToken(String username) {
+  public String createToken(String userId) {
     // 토큰 생성을 위한 메서드
     Date date = new Date();
 
     return BEARER_PREFIX + // baerer로 시작할 수 있게 하고
         Jwts.builder()
-            .setSubject(username) // 사용자 식별 (id)
+            .setSubject(userId) // 사용자 식별 (id)
             .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 토큰 만료 시간
             .setIssuedAt(date) // 토큰 발급일
             .signWith(key, signatureAlgorithm) // 암호화 알고리즘

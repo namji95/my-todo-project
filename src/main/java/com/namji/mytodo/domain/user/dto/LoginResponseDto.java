@@ -1,17 +1,16 @@
 package com.namji.mytodo.domain.user.dto;
 
-import com.namji.mytodo.domain.user.dto.LoginRequestDto;
 import lombok.Getter;
 
 @Getter
 public class LoginResponseDto {
 
-  private String username;
-  private String password;
-  private String token;
+  private final String userId;
+  private final String password;
+  private final String token;
 
   public LoginResponseDto(LoginRequestDto requestDto, String token) {
-    this.username = requestDto.getUsername();
+    this.userId = requestDto.getUserId();
     this.password = requestDto.getPassword();
     this.token = token;
   }

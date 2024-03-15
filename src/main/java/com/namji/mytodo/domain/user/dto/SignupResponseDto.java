@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public class SignupResponseDto {
 
-  private String username;
-  private String password;
-  private String email;
-  private String nickname;
+  private final String username;
+  private final String password;
+  private final String email;
+  private final String nickname;
 
   public SignupResponseDto(String username, String password, String email, String nickname) {
     this.username = username;

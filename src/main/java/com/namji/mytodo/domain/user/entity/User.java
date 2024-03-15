@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,17 +17,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
+@Builder
 public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long userId;
+  private Long id;
 
   @NotBlank
   @Column(unique = true, length = 50)
-  private String username;
+  private String userId;
 
   @NotBlank
   private String password;
@@ -36,7 +40,7 @@ public class User {
 
   @NotBlank(message = "닉네임은 필수 입력값입니다.")
   @Column(length = 100)
-  private String nickname;
+  private String username;
 
   @CreatedDate
   private LocalDateTime createdAt;
@@ -44,11 +48,11 @@ public class User {
   @LastModifiedDate
   private LocalDateTime modifiedAt;
 
-  public User(String username, String password, String email, String nickname) {
-    this.username = username;
+  public User(String userId, String password, String email, String username) {
+    this.userId = userId;
     this.password = password;
     this.email = email;
-    this.nickname = nickname;
+    this.username = username;
     this.createdAt = LocalDateTime.now();
     this.modifiedAt = LocalDateTime.now();
   }

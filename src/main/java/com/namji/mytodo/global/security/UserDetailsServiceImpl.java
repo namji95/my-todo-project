@@ -17,9 +17,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   // UserRepository 객체 생성 후 생성자를 통해 UserRepository 객체를 받아서 멤버 변수로 저장
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("NOT FOUND" + username));
+  public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    User user = userRepository.findByUserId(userId)
+        .orElseThrow(() -> new UsernameNotFoundException("NOT FOUND" + userId));
     return new UserDetailsImpl(user);
   }
 }

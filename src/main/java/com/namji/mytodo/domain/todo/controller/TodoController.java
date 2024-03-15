@@ -3,8 +3,8 @@ package com.namji.mytodo.domain.todo.controller;
 import com.namji.mytodo.domain.todo.dto.TodoRequestDto;
 import com.namji.mytodo.domain.todo.dto.TodoResponseDto;
 import com.namji.mytodo.domain.todo.entity.Todo;
-import com.namji.mytodo.global.security.UserDetailsImpl;
 import com.namji.mytodo.domain.todo.service.TodoService;
+import com.namji.mytodo.global.security.UserDetailsImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,18 +34,18 @@ public class TodoController {
     TodoResponseDto responseDto = todoService.createTodo(requestDto, userDetails);
 
     return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    // ResponseEntity
   }
 
   // 할일 전체 조회
   @GetMapping("/todos")
-  public ResponseEntity<List<Todo>> getTodoList() {
+  public ResponseEntity<List<TodoResponseDto>> getTodoList() {
     return new ResponseEntity<>(todoService.getTodoList(), HttpStatus.OK);
   }
 
   // 할일 선택 조회
   @GetMapping("/todos/{todoId}")
-  public ResponseEntity<TodoResponseDto> getTodo(@PathVariable Long todoId) {
+  public ResponseEntity<TodoResponseDto> getTodo(
+      @PathVariable("todoId") Long todoId) {
     TodoResponseDto responseDto = todoService.getTodo(todoId);
 
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -55,16 +55,20 @@ public class TodoController {
   @PutMapping("/todos/{todoId}")
   public ResponseEntity<TodoResponseDto> updateTodo(
       @PathVariable Long todoId,
-      @RequestBody TodoRequestDto requestDto) {
-    TodoResponseDto responseDto = todoService.updateTodo(todoId, requestDto);
+      @RequestBody TodoRequestDto requestDto,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    TodoResponseDto responseDto = todoService.updateTodo(
+        todoId, requestDto, userDetails);
 
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
 
   // 할일 삭제
   @DeleteMapping("/todos/{todoId}")
-  public ResponseEntity<TodoResponseDto> deleteTodo(@PathVariable Long todoId) {
-    TodoResponseDto responseDto = todoService.deleteTodo(todoId);
+  public ResponseEntity<TodoResponseDto> deleteTodo(
+      @PathVariable Long todoId,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    TodoResponseDto responseDto = todoService.deleteTodo(todoId, userDetails);
 
     return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
